@@ -1,0 +1,6 @@
+env
+.dockerignore
+Dockerfile-dev
+Dockerfile-prod
+docker-compose-dev.yml
+docker-compose-prod.yml
