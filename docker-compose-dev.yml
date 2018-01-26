@@ -32,13 +32,32 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  client:
+    container_name: client
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/client:/usr/src/app'
+    ports:
+      - '3007:3000'
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+      # - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - users
+    links:
+      - users
+
   nginx:
     container_name: nginx
-    build: ./services/nginx
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-dev
     restart: always
     ports:
       - 80:80
     depends_on:
       - users
-    links:
-      - users
+      - client
