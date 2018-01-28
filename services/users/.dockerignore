@@ -3,3 +3,4 @@ htmlcov
 .dockerignore
 Dockerfile-dev
 Dockerfile-prod
+migrations
