@@ -1,4 +1,18 @@
+language: node_js
+node_js: '9'
+
+before_install:
+  - stty cols 80
+
+dist: trusty
 sudo: required
+
+addons:
+  apt:
+    sources:
+     - google-chrome
+    packages:
+     - google-chrome-stable
 
 services:
   - docker
@@ -13,12 +27,15 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
+  - export TEST_URL=http://127.0.0.1
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
-  - docker-compose -f docker-compose-dev.yml up --build -d
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3
+  - docker-compose -f docker-compose-prod.yml up --build -d
 
 script:
-  - docker-compose -f docker-compose-dev.yml run users python manage.py test
-  - docker-compose -f docker-compose-dev.yml run users flake8 project
+  - bash test.sh stage
 
 after_script:
-  - docker-compose -f docker-compose-dev.yml down
+  - docker-compose -f docker-compose-prod.yml down

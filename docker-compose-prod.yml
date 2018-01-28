@@ -8,10 +8,10 @@ services:
       context: ./services/users
       dockerfile: Dockerfile-prod
     expose:
-      - '5000'
+      - 5000
     environment:
       - APP_SETTINGS=project.config.ProductionConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
@@ -24,8 +24,8 @@ services:
     build:
       context: ./services/users/project/db
       dockerfile: Dockerfile
-    ports:
-      - 5435:5432
+    expose:
+      - 5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -38,8 +38,8 @@ services:
       args:
         - NODE_ENV=production
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
-    ports:
-      - '3007:80'
+    expose:
+      - 80
     depends_on:
       - users
     links:
@@ -56,3 +56,15 @@ services:
     depends_on:
       - users
       - client
+
+  swagger:
+    container_name: swagger
+    build:
+      context: ./services/swagger
+      dockerfile: Dockerfile-prod
+    expose:
+      - 8080
+    environment:
+      - URL=swagger.json
+    depends_on:
+      - users

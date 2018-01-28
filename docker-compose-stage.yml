@@ -6,15 +6,12 @@ services:
     container_name: users
     build:
       context: ./services/users
-      dockerfile: Dockerfile-dev
-    volumes:
-      - './services/users:/usr/src/app'
-    ports:
-      - 5001:5000
+      dockerfile: Dockerfile-stage
+    expose:
+      - 5000
     environment:
-      - FLASK_DEBUG=1
-      - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_stage
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=my_precious
     depends_on:
@@ -27,8 +24,8 @@ services:
     build:
       context: ./services/users/project/db
       dockerfile: Dockerfile
-    ports:
-      - 5435:5432
+    expose:
+      - 5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -37,15 +34,12 @@ services:
     container_name: client
     build:
       context: ./services/client
-      dockerfile: Dockerfile-dev
-    volumes:
-      - './services/client:/usr/src/app'
-    ports:
-      - '3007:3000'
-    environment:
-      - NODE_ENV=development
-      - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
-      # - CHOKIDAR_USEPOLLING=true
+      dockerfile: Dockerfile-stage
+      args:
+        - NODE_ENV=production
+        - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+    expose:
+      - 80
     depends_on:
       - users
     links:
@@ -55,7 +49,7 @@ services:
     container_name: nginx
     build:
       context: ./services/nginx
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile-stage
     restart: always
     ports:
       - 80:80
@@ -67,11 +61,9 @@ services:
     container_name: swagger
     build:
       context: ./services/swagger
-      dockerfile: Dockerfile-dev
-    volumes:
-      - './services/swagger/swagger.json:/usr/share/nginx/html/swagger.json'
-    ports:
-      - '3008:8080'
+      dockerfile: Dockerfile-stage
+    expose:
+      - 8080
     environment:
       - URL=swagger.json
     depends_on:
