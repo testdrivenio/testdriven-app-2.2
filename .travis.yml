@@ -21,7 +21,7 @@ env:
   global:
     - DOCKER_COMPOSE_VERSION=1.18.0
     - COMMIT=${TRAVIS_COMMIT::8}
-    - MAIN_REPO=https://github.com/realpython/testdriven-app-2.2.git
+    - MAIN_REPO=https://github.com/testdrivenio/testdriven-app-2.2.git
     - USERS=test-driven-users
     - USERS_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/users
     - USERS_DB=test-driven-users_db
