@@ -45,14 +45,15 @@ before_script:
   - export DOCKER_ENV=$(if [ "$TRAVIS_BRANCH" == "production" ]; then echo "prod"; else echo "stage"; fi)
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose -f docker-compose-$DOCKER_ENV.yml up --build -d
+  - docker-compose -f docker-compose-stage.yml up --build -d
 
 script:
   - bash test.sh $DOCKER_ENV
 
 after_script:
-  - docker-compose -f docker-compose-$DOCKER_ENV.yml down
+  - docker-compose -f docker-compose-stage.yml down
 
 after_success:
   - bash ./docker-push.sh
   - bash ./docker-deploy-stage.sh
+  - bash ./docker-deploy-prod.sh

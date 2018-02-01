@@ -16,11 +16,11 @@ COPY ./requirements.txt /usr/src/app/requirements.txt
 # install requirements
 RUN pip install -r requirements.txt
 
-# add entrypoint.sh
-COPY ./entrypoint-prod.sh /usr/src/app/entrypoint-prod.sh
+# add entrypoint-stage.sh
+COPY ./entrypoint-stage.sh /usr/src/app/entrypoint-stage.sh
 
 # add app
 COPY . /usr/src/app
 
 # run server
-CMD ["./entrypoint-prod.sh"]
+CMD ["./entrypoint-stage.sh"]

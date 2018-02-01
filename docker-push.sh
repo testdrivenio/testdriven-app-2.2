@@ -19,6 +19,12 @@ then
   then
     export REACT_APP_USERS_SERVICE_URL="http://testdriven-staging-alb-355212289.us-west-1.elb.amazonaws.com"
   fi
+  if [ "$TRAVIS_BRANCH" == "production" ]
+  then
+    export REACT_APP_USERS_SERVICE_URL="http://testdriven-production-alb-1950288253.us-west-1.elb.amazonaws.com"
+    export DATABASE_URL="$AWS_RDS_URI"
+    export SECRET_KEY="$PRODUCTION_SECRET_KEY"
+  fi
   if [ "$TRAVIS_BRANCH" == "staging" ] || \
      [ "$TRAVIS_BRANCH" == "production" ]
   then
