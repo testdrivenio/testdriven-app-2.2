@@ -42,15 +42,18 @@ before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
+  - export DOCKER_ENV=$(if [ "$TRAVIS_BRANCH" == "production" ]; then echo "prod"; else echo "stage"; fi)
   - sh -e /etc/init.d/xvfb start
   - sleep 3
-  - docker-compose -f docker-compose-prod.yml up --build -d
+  - docker-compose -f docker-compose-stage.yml up --build -d
 
 script:
-  - bash test.sh stage
+  - bash test.sh $DOCKER_ENV
 
 after_script:
-  - docker-compose -f docker-compose-prod.yml down
+  - docker-compose -f docker-compose-stage.yml down
 
 after_success:
   - bash ./docker-push.sh
+  - bash ./docker-deploy-stage.sh
+  - bash ./docker-deploy-prod.sh
