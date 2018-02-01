@@ -16,11 +16,8 @@ COPY ./requirements.txt /usr/src/app/requirements.txt
 # install requirements
 RUN pip install -r requirements.txt
 
-# add entrypoint.sh
-COPY ./entrypoint-prod.sh /usr/src/app/entrypoint-prod.sh
-
 # add app
 COPY . /usr/src/app
 
 # run server
-CMD ["./entrypoint-prod.sh"]
+CMD gunicorn -b 0.0.0.0:5000 manage:app
