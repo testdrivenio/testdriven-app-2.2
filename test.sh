@@ -5,7 +5,7 @@ file=""
 fails=""
 
 if [[ "${env}" == "stage" ]]; then
-  file="docker-compose-dev.yml"
+  file="docker-compose-stage.yml"
 elif [[ "${env}" == "dev" ]]; then
   file="docker-compose-dev.yml"
 elif [[ "${env}" == "prod" ]]; then
@@ -22,10 +22,18 @@ inspect() {
   fi
 }
 
+/bin/sleep 5
+
 docker-compose -f $file run users python manage.py test
 inspect $? users
 docker-compose -f $file run users flake8 project
 inspect $? users-lint
+
+docker-compose -f $file run exercises python manage.py test
+inspect $? exercises
+docker-compose -f $file run exercises flake8 project
+inspect $? exercises-lint
+
 if [[ "${env}" == "dev" ]]; then
   docker-compose -f $file run client npm test -- --coverage
   inspect $? client
