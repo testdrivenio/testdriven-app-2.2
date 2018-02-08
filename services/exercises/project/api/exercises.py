@@ -12,6 +12,14 @@ from project.api.utils import authenticate
 exercises_blueprint = Blueprint('exercises', __name__)
 
 
+@exercises_blueprint.route('/exercises/ping', methods=['GET'])
+def ping_pong():
+    return jsonify({
+        'status': 'success',
+        'message': 'pong!'
+    })
+
+
 @exercises_blueprint.route('/exercises', methods=['GET'])
 def get_all_exercises():
     """Get all exercises"""

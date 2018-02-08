@@ -1,7 +1,7 @@
 import { Selector } from 'testcafe';
 
 const TEST_URL = process.env.TEST_URL;
-const SERVER_URL = process.env.REACT_APP_USERS_SERVICE_URL;
+const SERVER_URL = process.env.SERVER_URL
 
 
 fixture('/swagger').page(`${TEST_URL}/`);
