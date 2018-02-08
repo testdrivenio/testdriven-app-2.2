@@ -45,6 +45,8 @@ services:
     environment:
       - NODE_ENV=development
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+      - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
+      - REACT_APP_EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
       # - CHOKIDAR_USEPOLLING=true
     depends_on:
       - users
@@ -76,3 +78,37 @@ services:
       - URL=swagger.json
     depends_on:
       - users
+
+  exercises:
+    container_name: exercises
+    build:
+      context: ./services/exercises
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/exercises:/usr/src/app'
+    ports:
+      - 5002:5000
+    environment:
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - USERS_SERVICE_URL=http://users:5000
+      - SECRET_KEY=my_precious
+      - DATABASE_URL=postgres://postgres:postgres@exercises-db:5432/exercises_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@exercises-db:5432/exercises_test
+    depends_on:
+      - users
+      - exercises-db
+    links:
+      - users
+      - exercises-db
+
+  exercises-db:
+    container_name: exercises-db
+    build:
+      context: ./services/exercises/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

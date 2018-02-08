@@ -1,0 +1,13 @@
+.navbar {
+  border-radius: 0;
+  color: rgba(255, 255, 255, .5);
+}
+
+.navbar-brand {
+  color: #777 !important;
+}
+
+.navbar-brand:hover {
+  cursor: pointer;
+  color: #5e5e5e !important;
+}
