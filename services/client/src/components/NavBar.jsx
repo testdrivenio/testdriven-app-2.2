@@ -1,30 +1,36 @@
 import React from 'react';
-
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
+import './NavBar.css';
+
 const NavBar = (props) => (
-  <Navbar inverse collapseOnSelect>
+  <Navbar collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
-        <span>{props.title}</span>
+        <LinkContainer to="/">
+          <span>{props.title}</span>
+        </LinkContainer>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <LinkContainer to="/">
-          <NavItem eventKey={1}>Home</NavItem>
-        </LinkContainer>
         <LinkContainer to="/about">
           <NavItem eventKey={2}>About</NavItem>
         </LinkContainer>
+        <LinkContainer to="/all-users">
+          <NavItem>Users</NavItem>
+        </LinkContainer>
         {props.isAuthenticated &&
           <LinkContainer to="/status">
-            <NavItem eventKey={3}>User Status</NavItem>
+            <NavItem eventKey={4}>User Status</NavItem>
           </LinkContainer>
         }
       </Nav>
+      <ul className="nav navbar-nav">
+        <li><a href="/swagger">Swagger</a></li>
+      </ul>
       <Nav pullRight>
         {!props.isAuthenticated &&
           <LinkContainer to="/register">
