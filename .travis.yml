@@ -30,6 +30,10 @@ env:
     - CLIENT_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/client
     - SWAGGER=test-driven-swagger
     - SWAGGER_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/swagger
+    - EXERCISES=test-driven-exercises
+    - EXERCISES_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises
+    - EXERCISES_DB=test-driven-exercises_db
+    - EXERCISES_DB_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises/project/db
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -40,6 +44,8 @@ before_install:
 before_script:
   - export TEST_URL=http://127.0.0.1
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_EXERCISES_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_API_GATEWAY_URL=https://69n19z0lo3.execute-api.us-west-1.amazonaws.com/v1/execute
   - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
   - export DOCKER_ENV=$(if [ "$TRAVIS_BRANCH" == "production" ]; then echo "prod"; else echo "stage"; fi)
