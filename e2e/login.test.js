@@ -44,9 +44,11 @@ test(`should allow a user to sign in`, async (t) => {
     .click(Selector('input[type="submit"]'))
 
   // assert user is redirected to '/'
-  // assert '/' is displayed properly
+  // assert '/all-users' is displayed properly
   const tableRow = Selector('td').withText(username).parent();
   await t
+    .expect(Selector('.alert-success').withText('Welcome!').exists).ok()
+    .navigateTo(`${TEST_URL}/all-users`)
     .expect(Selector('H1').withText('All Users').exists).ok()
     .expect(tableRow.child().withText(username).exists).ok()
     .expect(tableRow.child().withText(email).exists).ok()
@@ -54,7 +56,6 @@ test(`should allow a user to sign in`, async (t) => {
     .expect(Selector('a').withText('Log Out').exists).ok()
     .expect(Selector('a').withText('Register').exists).notOk()
     .expect(Selector('a').withText('Log In').exists).notOk()
-    .expect(Selector('.alert-success').withText('Welcome!').exists).ok()
 
   // log a user out
   await t
