@@ -14,6 +14,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_stage
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=my_precious
+      - EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
     depends_on:
       - users-db
     links:
@@ -40,6 +41,7 @@ services:
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
         - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
         - REACT_APP_EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
+        - REACT_APP_SCORES_SERVICE_URL=${REACT_APP_SCORES_SERVICE_URL}
     expose:
       - 80
     depends_on:
@@ -93,6 +95,38 @@ services:
     container_name: exercises-db
     build:
       context: ./services/exercises/project/db
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  scores:
+    container_name: scores
+    build:
+      context: ./services/scores
+      dockerfile: Dockerfile-stage
+    expose:
+      - 5000
+    environment:
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@scores-db:5432/scores_stage
+      - DATABASE_TEST_URL=postgres://postgres:postgres@scores-db:5432/scores_test
+      - USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+    depends_on:
+      - users
+      - scores-db
+      - exercises
+    links:
+      - users
+      - scores-db
+      - exercises
+
+  scores-db:
+    container_name: scores-db
+    build:
+      context: ./services/scores/project/db
       dockerfile: Dockerfile
     expose:
       - 5432

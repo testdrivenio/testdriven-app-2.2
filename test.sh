@@ -34,6 +34,11 @@ inspect $? exercises
 docker-compose -f $file run exercises flake8 project
 inspect $? exercises-lint
 
+docker-compose -f $file run exercises python manage.py test
+inspect $? scores
+docker-compose -f $file run scores flake8 project
+inspect $? scores-lint
+
 if [[ "${env}" == "dev" ]]; then
   docker-compose -f $file run client npm test -- --coverage
   inspect $? client
