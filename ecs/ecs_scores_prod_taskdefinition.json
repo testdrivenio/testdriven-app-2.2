@@ -1,0 +1,39 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "scores",
+      "image": "%s.dkr.ecr.us-west-1.amazonaws.com/test-driven-scores:production",
+      "essential": true,
+      "memoryReservation": 300,
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "protocol": "tcp",
+          "containerPort": 5000
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_SETTINGS",
+          "value": "project.config.ProductionConfig"
+        },
+        {
+          "name": "DATABASE_TEST_URL",
+          "value": "postgres://postgres:postgres@scores-db:5432/scores_test"
+        },
+        {
+          "name": "DATABASE_URL",
+          "value": "%s"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "testdriven-scores-prod",
+          "awslogs-region": "us-west-1"
+        }
+      }
+    }
+  ],
+  "family": "testdriven-scores-prod-td"
+}
