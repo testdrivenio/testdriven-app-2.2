@@ -24,6 +24,14 @@
         {
           "name": "DATABASE_URL",
           "value": "postgres://postgres:postgres@scores-db:5432/scores_stage"
+        },
+        {
+          "name": "USERS_SERVICE_URL",
+          "value": "http://testdriven-staging-alb-355212289.us-west-1.elb.amazonaws.com"
+        },
+        {
+          "name": "EXERCISES_SERVICE_URL",
+          "value": "http://testdriven-staging-alb-355212289.us-west-1.elb.amazonaws.com"
         }
       ],
       "links": [
