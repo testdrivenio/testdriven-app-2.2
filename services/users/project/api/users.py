@@ -29,7 +29,7 @@ def index():
 def ping_pong():
     return jsonify({
         'status': 'success',
-        'message': 'pong!'
+        'message': 'pong'
     })
 
 
