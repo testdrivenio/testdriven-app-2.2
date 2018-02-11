@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Message = (props) => {
   return (
@@ -15,6 +16,12 @@ const Message = (props) => {
       >&times;</button>
     </div>
   )
+};
+
+Message.propTypes = {
+  messageName: PropTypes.string,
+  messageType: PropTypes.string,
+  removeMessage: PropTypes.func.isRequired,
 };
 
 export default Message;

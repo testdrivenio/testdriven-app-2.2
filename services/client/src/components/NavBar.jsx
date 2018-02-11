@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -51,5 +52,10 @@ const NavBar = (props) => (
     </Navbar.Collapse>
   </Navbar>
 )
+
+NavBar.propTypes = {
+  title: PropTypes.string.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+};
 
 export default NavBar;

@@ -47,7 +47,8 @@ services:
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
       - REACT_APP_API_GATEWAY_URL=${REACT_APP_API_GATEWAY_URL}
       - REACT_APP_EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
-      # - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_SCORES_SERVICE_URL=${REACT_APP_SCORES_SERVICE_URL}
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - users
     links:
@@ -109,6 +110,43 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5436:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  scores:
+    container_name: scores
+    build:
+      context: ./services/scores
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/scores:/usr/src/app'
+    ports:
+      - 5003:5000
+    environment:
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - SECRET_KEY=my_precious
+      - DATABASE_URL=postgres://postgres:postgres@scores-db:5432/scores_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@scores-db:5432/scores_test
+      - USERS_SERVICE_URL=http://users:5000
+      - EXERCISES_SERVICE_URL=http://exercises:5000
+    depends_on:
+      - users
+      - scores-db
+      - exercises
+    links:
+      - users
+      - scores-db
+      - exercises
+
+  scores-db:
+    container_name: scores-db
+    build:
+      context: ./services/scores/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5437:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

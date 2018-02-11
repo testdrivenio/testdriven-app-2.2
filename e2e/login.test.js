@@ -51,7 +51,7 @@ test(`should allow a user to sign in`, async (t) => {
     .navigateTo(`${TEST_URL}/all-users`)
     .expect(Selector('H1').withText('All Users').exists).ok()
     .expect(tableRow.child().withText(username).exists).ok()
-    .expect(tableRow.child().withText(email).exists).ok()
+    // .expect(tableRow.child().withText(email).exists).ok()
     .expect(Selector('a').withText('User Status').exists).ok()
     .expect(Selector('a').withText('Log Out').exists).ok()
     .expect(Selector('a').withText('Register').exists).notOk()

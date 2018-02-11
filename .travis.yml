@@ -34,6 +34,10 @@ env:
     - EXERCISES_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises
     - EXERCISES_DB=test-driven-exercises_db
     - EXERCISES_DB_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises/project/db
+    - SCORES=test-driven-scores
+    - SCORES_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/scores
+    - SCORES_DB=test-driven-scores_db
+    - SCORES_DB_REPO=${MAIN_REPO}#${TRAVIS_BRANCH}:services/scores/project/db
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -45,6 +49,7 @@ before_script:
   - export TEST_URL=http://127.0.0.1
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - export REACT_APP_EXERCISES_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_SCORES_SERVICE_URL=http://127.0.0.1
   - export REACT_APP_API_GATEWAY_URL=https://69n19z0lo3.execute-api.us-west-1.amazonaws.com/v1/execute
   - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
