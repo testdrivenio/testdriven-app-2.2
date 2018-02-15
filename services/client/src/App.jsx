@@ -26,6 +26,7 @@ class App extends Component {
     this.loginUser = this.loginUser.bind(this);
     this.createMessage = this.createMessage.bind(this);
     this.removeMessage = this.removeMessage.bind(this);
+    this.getUsers = this.getUsers.bind(this);
   }
   componentWillMount() {
     if (window.localStorage.getItem('authToken')) {
@@ -36,9 +37,31 @@ class App extends Component {
     this.getUsers();
   };
   getUsers() {
-    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
-    .then((res) => { this.setState({ users: res.data.data.users }); })
-    .catch((err) => {  });
+    return axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
+    .then((res) => {
+      const users = res.data.data.users;
+      const updatedUsers = users.map((user) => {
+        user.scores = [];
+        return user;
+      });
+      this.setState({ users: updatedUsers });
+      return axios.get(`${process.env.REACT_APP_SCORES_SERVICE_URL}/scores`)
+    })
+    .then((res) => {
+      const scores = res.data.data.scores;
+      const users = [...this.state.users]
+      const updatedUsers = users.map((user) => {
+        for (let score of scores) {
+          if (score.user_id === user.id) {
+            if (score.correct === null) score.correct = 'N/A';
+            user.scores.push(score);
+          }
+        }
+        return user;
+      });
+      this.setState({ users: updatedUsers });
+    })
+    .catch((err) => { });
   };
   logoutUser() {
     window.localStorage.clear();
@@ -87,6 +110,7 @@ class App extends Component {
                 <Route exact path='/' render={() => (
                   <Exercises
                     isAuthenticated={this.state.isAuthenticated}
+                    getUsers={this.getUsers}
                   />
                 )} />
                 <Route exact path='/about' component={About}/>
@@ -96,19 +120,21 @@ class App extends Component {
                     isAuthenticated={this.state.isAuthenticated}
                     loginUser={this.loginUser}
                     createMessage={this.createMessage}
-                  />
-                )} />
-                <Route exact path='/all-users' render={() => (
-                  <UsersList
-                    users={this.state.users}
+                    getUsers={this.getUsers}
                   />
                 )} />
                 <Route exact path='/login' render={() => (
                   <Form
                     formType={'login'}
                     isAuthenticated={this.state.isAuthenticated}
-                    loginUser={this.loginUser.bind(this)}
+                    loginUser={this.loginUser}
                     createMessage={this.createMessage}
+                    getUsers={this.getUsers}
+                  />
+                )} />
+                <Route exact path='/all-users' render={() => (
+                  <UsersList
+                    users={this.state.users}
                   />
                 )} />
                 <Route exact path='/logout' render={() => (

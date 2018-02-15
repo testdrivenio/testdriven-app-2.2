@@ -14,7 +14,12 @@ describe('When given a success message', () => {
     messageName: 'Hello, World!',
     messageType: 'success',
     removeMessage: removeMessage,
-  }
+  };
+
+  beforeEach(() => {
+    console.error = jest.fn();
+    console.error.mockClear();
+  });
 
   it(`Message renders properly`, () => {
     const wrapper = shallow(<Message {...messageSuccessProps} />);
@@ -29,6 +34,13 @@ describe('When given a success message', () => {
     expect(removeMessage).toHaveBeenCalledTimes(0);
     button.simulate('click');
     expect(removeMessage).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it(`Message does not render properly when not all props are defined`, () => {
+    delete messageSuccessProps.removeMessage
+    const wrapper = shallow(<Message {...messageSuccessProps} />);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   test('Message renders a snapshot properly', () => {
@@ -50,6 +62,11 @@ describe('When given a danger message', () => {
     removeMessage: removeMessage,
   }
 
+  beforeEach(() => {
+    console.error = jest.fn();
+    console.error.mockClear();
+  });
+
   it(`Message renders properly`, () => {
     const wrapper = shallow(<Message {...messageDangerProps} />);
     const element = wrapper.find('.alert-danger');
@@ -63,6 +80,7 @@ describe('When given a danger message', () => {
     expect(removeMessage).toHaveBeenCalledTimes(0);
     button.simulate('click');
     expect(removeMessage).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   test('Message renders a snapshot properly', () => {

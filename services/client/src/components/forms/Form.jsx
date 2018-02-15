@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
@@ -20,6 +21,7 @@ class Form extends Component {
     };
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.addScores = this.addScores.bind(this);
   };
   componentDidMount() {
     this.clearForm();
@@ -59,10 +61,11 @@ class Form extends Component {
       };
     };
     const url = `${process.env.REACT_APP_USERS_SERVICE_URL}/auth/${formType}`;
-    axios.post(url, data)
+    return axios.post(url, data)
     .then((res) => {
       this.clearForm();
       this.props.loginUser(res.data.auth_token);
+      if (formType === 'register') this.addScores();
     })
     .catch((err) => {
       if (formType === 'login') {
@@ -131,6 +134,27 @@ class Form extends Component {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   };
+  addScores() {
+    const exercisesURL = process.env.REACT_APP_EXERCISES_SERVICE_URL;
+    return axios.get(`${exercisesURL}/exercises`)
+    .then((res) => {
+      const requests = res.data.data.exercises.map((el) => {
+        const options = {
+          url: `${process.env.REACT_APP_SCORES_SERVICE_URL}/scores`,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${window.localStorage.authToken}`
+          },
+          data: {exercise_id: el.id},
+        };
+        return axios(options);
+      });
+      return axios.all(requests)
+    })
+    .then(axios.spread((...res) => { this.props.getUsers(); }))
+    .catch((err) => { console.log(err) });
+  };
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to='/' />;
@@ -193,6 +217,14 @@ class Form extends Component {
       </div>
     )
   };
+};
+
+Form.propTypes = {
+  formType: PropTypes.string.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  loginUser: PropTypes.func.isRequired,
+  createMessage: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
 };
 
 export default Form;
