@@ -23,4 +23,4 @@ COPY ./entrypoint-stage.sh /usr/src/app/entrypoint-stage.sh
 COPY . /usr/src/app
 
 # run server
-CMD ["./entrypoint.sh"]
+CMD ["./entrypoint-stage.sh"]
