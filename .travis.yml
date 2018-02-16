@@ -50,7 +50,7 @@ before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - export REACT_APP_EXERCISES_SERVICE_URL=http://127.0.0.1
   - export REACT_APP_SCORES_SERVICE_URL=http://127.0.0.1
-  - export REACT_APP_API_GATEWAY_URL=https://69n19z0lo3.execute-api.us-west-1.amazonaws.com/v1/execute
+  - export REACT_APP_API_GATEWAY_URL=https://69n19z0lo3.execute-api.us-west-1.amazonaws.com/v2/execute
   - export SECRET_KEY=my_precious
   - export DISPLAY=:99.0
   - export DOCKER_ENV=$(if [ "$TRAVIS_BRANCH" == "production" ]; then echo "prod"; else echo "stage"; fi)
